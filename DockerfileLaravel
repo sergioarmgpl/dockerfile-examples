@@ -1,4 +1,4 @@
-#PARA CONSTRUIRLO EJECUTAR:
+#PARA CONSTRUIRLO EJECUTAR
 #docker build -t nombre_imagen .
 MAINTAINER CloudNativePlusGT
 #Este git es para multistage
