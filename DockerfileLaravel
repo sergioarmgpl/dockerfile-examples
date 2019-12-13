@@ -1,8 +1,12 @@
 #PARA CONSTRUIRLO EJECUTAR:
 #docker build -t nombre_imagen .
+MAINTAINER CloudNativePlusGT
+#Este git es para multistage
+FROM gittools/build-images
+RUN git clone https://github.com/sergioarmgpl/sitioweb.git
+COPY sitioweb /tmp
 #Imagen en la que se basa el container
 FROM ubuntu:18.04
-MAINTAINER CloudNativePlusGT
 #Evitar interacción de consola cuando se ejecuta
 ENV DEBIAN_FRONTEND noninteractive
 #RUN ejecuta comandos dentro del container
@@ -28,8 +32,9 @@ RUN sed -i "s/\$process->setTty(true);/\/\/\$process->setTty(true);/g" /root/.co
 #WORKDIR /var/www/html/proyecto
 #OPCION 2 bajo un proyecto ya hecho
 #1.clonar y se pega en /var/www/html crea la carpeta sitioweb con su contenido adentro
-RUN git clone https://github.com/sergioarmgpl/sitioweb.git
-RUN mv sitioweb/* .
+#RUN git clone https://github.com/sergioarmgpl/sitioweb.git
+RUN mv /tmp/sitioweb/* .
+#RUN mv sitioweb/* .
 #EJECUTA LARAVEL
 CMD php artisan serve --host 0.0.0.0 --port 80
 #OPCION 3 agregar carpeta en el origen de este docker file
