@@ -6,6 +6,7 @@ FROM alpine/git:latest
 RUN git clone https://github.com/sergioarmgpl/sitioweb.git
 COPY sitioweb /tmp
 #Imagen en la que se basa el container
+
 FROM ubuntu:18.04
 #Evitar interacción de consola cuando se ejecuta
 ENV DEBIAN_FRONTEND noninteractive
