@@ -3,7 +3,7 @@
 #Este git es para multistage
 FROM alpine/git:latest
 RUN git clone https://github.com/sergioarmgpl/sitioweb.git
-COPY sitioweb /tmp
+COPY sitioweb /root
 #Imagen en la que se basa el container
 
 FROM ubuntu:18.04
@@ -28,25 +28,29 @@ WORKDIR /var/www/html
 RUN composer global require laravel/installer
 RUN echo "export PATH=/root/.composer/vendor/bin:$PATH" >> /root/.bashrc
 RUN sed -i "s/\$process->setTty(true);/\/\/\$process->setTty(true);/g" /root/.composer/vendor/laravel/installer/src/NewCommand.php
+
 #OPCION 1 crea un nuevo proyecto
 #RUN /root/.composer/vendor/bin/laravel new --force proyecto
 #WORKDIR /var/www/html/proyecto
+
 #OPCION 2 bajo un proyecto ya hecho
 #1.clonar y se pega en /var/www/html crea la carpeta sitioweb con su contenido adentro
-#RUN git clone https://github.com/sergioarmgpl/sitioweb.git
-RUN mv /tmp/sitioweb/* .
-#RUN mv sitioweb/* .
+RUN git clone https://github.com/sergioarmgpl/sitioweb.git
+RUN --from=0 mv /tmp/sitioweb/* .
+RUN mv sitioweb/* .
 #EJECUTA LARAVEL
-CMD php artisan serve --host 0.0.0.0 --port 80
+#CMD php artisan serve --host 0.0.0.0 --port 80
+
 #OPCION 3 agregar carpeta en el origen de este docker file
 #ADD agrega una carpeta que esta dentro del mismo lugar del Dockerfile dentro del la imagen
 #COPY copia carpetas existentes dentro del mismo container
 #ADD carpeta .
 #RUN mv carpeta/* .
 #CMD php artisan serve --host 0.0.0.0 --port 80
-#OPCION 4
+
+#OPCION OPCIONAL
 #DESCOMENTAR ESTO SI ES UNA PAGINA NORMAL EN HTML O PHP
-#CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 #EXPONE EL PUERTO 80
 #CMD es el comando con el que se crea el container por defecto al ejecutar run
 #CMD debe de colocarse un comando que quede en primer plano para que al darle run
